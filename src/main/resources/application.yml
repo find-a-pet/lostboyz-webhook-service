@@ -1,0 +1,28 @@
+description:  ${spring.application.description}
+title:  ${spring.application.name}
+version:  ${spring.application.version}
+
+info:
+  app:
+    id: ${spring.application.id}
+    name: ${spring.application.name}
+    version: ${spring.application.version}
+
+server:
+  port: 14003
+
+spring:
+  application:
+    description: Lostboyz webhook service
+    id: lostboyz-webhook-service
+    name: lostboyz-webhook-service
+    version: 0.0.1-SNAPSHOT
+  output:
+    ansi:
+      enabled: detect
+
+logging:
+  file:
+    name: logs/lostboyz-webhook-service.log
+  level:
+    root: ERROR
