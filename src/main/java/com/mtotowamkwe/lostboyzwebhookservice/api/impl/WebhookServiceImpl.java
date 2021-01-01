@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import javax.validation.Valid;
+
 @RestController
 public class WebhookServiceImpl implements WebhookService {
 
@@ -18,14 +20,15 @@ public class WebhookServiceImpl implements WebhookService {
     private RestTemplate template = new RestTemplate();
 
     @Override
-    @ResponseBody
     @RequestMapping(value = WEBHOOK_SERVICE_URL, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RedditSubmission> sendToPetService(@RequestBody RedditSubmission submission) {
+    @ResponseBody
+    public ResponseEntity<RedditSubmission> sendToPetService(@Valid @RequestBody RedditSubmission submission) {
         ResponseEntity<RedditSubmission> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
+            // TODO: Update URLs to match production endpoints prior to deployment
             response = template.postForEntity(PET_SERVICE_URL, new HttpEntity<>(submission, headers),
                     RedditSubmission.class);
         } catch (Exception e) {
@@ -33,7 +36,6 @@ public class WebhookServiceImpl implements WebhookService {
             if (e instanceof HttpClientErrorException) {
                 HttpClientErrorException clientError = (HttpClientErrorException) e;
                 response = new ResponseEntity<>(clientError.getStatusCode());
-
             }
         }
 
