@@ -2,7 +2,6 @@ package com.mtotowamkwe.lostboyzwebhookservice.api.impl;
 
 import com.mtotowamkwe.lostboyzwebhookservice.api.WebhookService;
 import com.mtotowamkwe.lostboyzwebhookservice.model.RedditSubmission;
-import com.mtotowamkwe.lostboyzwebhookservice.util.WebhookServiceConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
@@ -22,8 +21,8 @@ public class WebhookServiceImpl implements WebhookService {
     @Override
     @RequestMapping(value = WEBHOOK_SERVICE_URL, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<RedditSubmission> sendToPetService(@Valid @RequestBody RedditSubmission submission) {
-        ResponseEntity<RedditSubmission> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> sendToPetService(@Valid @RequestBody RedditSubmission submission) {
+        ResponseEntity<?> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         try {
             HttpHeaders headers = new HttpHeaders();

@@ -6,5 +6,5 @@ import org.springframework.http.ResponseEntity;
 
 public interface WebhookService extends WebhookServiceConstants {
 
-    ResponseEntity<RedditSubmission> sendToPetService(RedditSubmission submission);
+    ResponseEntity<?> sendToPetService(RedditSubmission submission);
 }

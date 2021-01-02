@@ -3,8 +3,13 @@ package com.mtotowamkwe.lostboyzwebhookservice.model;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 
+import java.io.Serializable;
+import java.util.Random;
+
 @Data
-public class RedditSubmission {
+public class RedditSubmission implements Serializable {
+
+     private static final long serialVersionUID = new Random().nextLong();
 
      private String id;
      private boolean locked;
