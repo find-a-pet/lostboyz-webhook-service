@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.validation.Valid;
 import java.io.*;
-import java.nio.file.Files;
+import java.nio.charset.StandardCharsets;
 
 @RestController
 public class WebhookServiceImpl implements WebhookService {
@@ -24,7 +24,7 @@ public class WebhookServiceImpl implements WebhookService {
 
     private ClassLoader loader = getClass().getClassLoader();
 
-    public WebhookServiceImpl() {
+    public WebhookServiceImpl() throws IOException {
         buildIndexPageUsingMarkdown();
     }
 
@@ -53,12 +53,18 @@ public class WebhookServiceImpl implements WebhookService {
 
     // Render some documentation as a smoke test that we are up and running
     private void buildIndexPageUsingMarkdown() {
-        try {
-            String content = new String(Files.readAllBytes(new File(loader.getResource(DOCS).getFile()).toPath()));
-            String html = Processor.process(content);
-            BufferedWriter writer = new BufferedWriter(new FileWriter(new File(loader.getResource(INDEX).getFile())));
-            writer.write(html);
-            writer.close();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(loader.getResource(INDEX).getFile())))) {
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(loader.getResourceAsStream(DOCS), StandardCharsets.UTF_8));
+
+            String content;
+
+            while ((content = reader.readLine()) != null) {
+                String html = Processor.process(content);
+                writer.write(html);
+            }
+
+            reader.close();
         } catch (FileNotFoundException fnfex) {
             LOG.error("\nindex(): The file README.md was not found.", fnfex);
         } catch (IOException ioe) {
