@@ -53,7 +53,7 @@ public class WebhookServiceImpl implements WebhookService {
 
     // Render some documentation as a smoke test that we are up and running
     private void buildIndexPageUsingMarkdown() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(loader.getResource(INDEX).getFile())))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(String.valueOf(loader.getResourceAsStream(INDEX)))))) {
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(loader.getResourceAsStream(DOCS), StandardCharsets.UTF_8));
 
