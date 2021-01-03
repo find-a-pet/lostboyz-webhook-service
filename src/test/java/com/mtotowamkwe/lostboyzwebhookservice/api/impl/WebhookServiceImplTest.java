@@ -122,7 +122,7 @@ public class WebhookServiceImplTest {
 
     @Test
     public void sendToPetService() throws URISyntaxException {
-        server.expect(manyTimes(), requestTo(CONSTANTS.PET_SERVICE_URL))
+        server.expect(manyTimes(), requestTo(CONSTANTS.PET_SERVICE_URL_DEV))
                 .andExpect(method(HttpMethod.POST))
                 .andExpect(header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
                 .andRespond(withStatus(HttpStatus.CREATED)
@@ -132,7 +132,7 @@ public class WebhookServiceImplTest {
 
 
         ResponseEntity<PetServiceResponse> response = template.postForEntity(
-                CONSTANTS.PET_SERVICE_URL,
+                CONSTANTS.PET_SERVICE_URL_DEV,
                 new HttpEntity<>(petServiceRequest.toString(), headers),
                 PetServiceResponse.class);
 
