@@ -19,4 +19,8 @@ public interface WebhookServiceConstants {
     String RESOLUTION_URL_4 = "https://preview.redd.it/qyzkvpl60bz51.jpg?width=640&crop=smart&auto=webp&s=640fa6cc9115f9a7efb017475b4abeb75c8bcbc4";
 
     String PREVIEW_IMG_ID = "KjU7Wmv3IcF7UT5uN8PSwHLFMNoy0EniH_XGeNPdCSA";
+
+    String DOCS = "README.md";
+
+    String INDEX = "static/index.html";
 }
