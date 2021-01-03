@@ -4,7 +4,9 @@ public interface WebhookServiceConstants {
 
     String WEBHOOK_SERVICE_URL = "/api/v1/webhook";
 
-    String PET_SERVICE_URL = "http://127.0.0.1:14004/api/v1/pets";
+    String PET_SERVICE_URL_DEV = "http://127.0.0.1:14004/api/v1/pets";
+
+    String PET_SERVICE_URL_PROD = "https://lostboyz-pet-service.herokuapp.com/api/v1/pets";
 
     String A_PET_LOCATED_AT_URL = "http://localhost:14005/api/v1/pets/0de65864-fa6c-413f-9769-5f01883c0e7a";
 
