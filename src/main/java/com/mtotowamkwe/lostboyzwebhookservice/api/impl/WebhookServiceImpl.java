@@ -1,6 +1,5 @@
 package com.mtotowamkwe.lostboyzwebhookservice.api.impl;
 
-import com.github.rjeschke.txtmark.Processor;
 import com.mtotowamkwe.lostboyzwebhookservice.api.WebhookService;
 import com.mtotowamkwe.lostboyzwebhookservice.model.PetServiceResponse;
 import com.mtotowamkwe.lostboyzwebhookservice.model.RedditSubmission;
@@ -12,8 +11,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.validation.Valid;
-import java.io.*;
-import java.nio.charset.StandardCharsets;
 
 @RestController
 public class WebhookServiceImpl implements WebhookService {
@@ -21,12 +18,6 @@ public class WebhookServiceImpl implements WebhookService {
     private static final Logger LOG = LoggerFactory.getLogger(WebhookServiceImpl.class);
 
     private RestTemplate template = new RestTemplate();
-
-    private ClassLoader loader = getClass().getClassLoader();
-
-    public WebhookServiceImpl() throws IOException {
-        buildIndexPageUsingMarkdown();
-    }
 
     @Override
     @RequestMapping(value = WEBHOOK_SERVICE_URL, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -49,26 +40,5 @@ public class WebhookServiceImpl implements WebhookService {
         }
 
         return response;
-    }
-
-    // Render some documentation as a smoke test that we are up and running
-    private void buildIndexPageUsingMarkdown() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(String.valueOf(loader.getResourceAsStream(INDEX)))))) {
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(loader.getResourceAsStream(DOCS), StandardCharsets.UTF_8));
-
-            String content;
-
-            while ((content = reader.readLine()) != null) {
-                String html = Processor.process(content);
-                writer.write(html);
-            }
-
-            reader.close();
-        } catch (FileNotFoundException fnfex) {
-            LOG.error("\nindex(): The file README.md was not found.", fnfex);
-        } catch (IOException ioe) {
-            LOG.error("\nindex():", ioe);
-        }
     }
 }
