@@ -28,8 +28,7 @@ public class WebhookServiceImpl implements WebhookService {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            // TODO: Update URLs to match production endpoints prior to deployment
-            response = template.postForEntity(PET_SERVICE_URL_DEV, new HttpEntity<>(submission, headers),
+            response = template.postForEntity(PET_SERVICE_URL_PROD, new HttpEntity<>(submission, headers),
                     PetServiceResponse.class);
         } catch (Exception e) {
             LOG.error("sendToPetService(" + submission + ")", e);

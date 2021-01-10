@@ -46,10 +46,10 @@ public class WebhookServiceImplTest {
                 "  \"id\": \"0de65864-fa6c-413f-9769-5f01883c0e7a\",\n" +
                 "  \"_links\": {\n" +
                 "    \"self\": {\n" +
-                "      \"href\": \"http://127.0.0.1:14004/api/v1/pets/0de65864-fa6c-413f-9769-5f01883c0e7a\"\n" +
+                "      \"href\": \"https://lostboyz-pet-service.herokuapp.com/api/v1/pets/0de65864-fa6c-413f-9769-5f01883c0e7a\"\n" +
                 "    },\n" +
                 "    \"pets\": {\n" +
-                "      \"href\": \"http://127.0.0.1:14004/api/v1/pets\"\n" +
+                "      \"href\": \"https://lostboyz-pet-service.herokuapp.com/api/v1/pets\"\n" +
                 "    }\n" +
                 "  }\n" +
                 "}  ");
@@ -122,7 +122,7 @@ public class WebhookServiceImplTest {
 
     @Test
     public void sendToPetService() throws URISyntaxException {
-        server.expect(manyTimes(), requestTo(CONSTANTS.PET_SERVICE_URL_DEV))
+        server.expect(manyTimes(), requestTo(CONSTANTS.PET_SERVICE_URL_PROD))
                 .andExpect(method(HttpMethod.POST))
                 .andExpect(header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
                 .andRespond(withStatus(HttpStatus.CREATED)
@@ -132,7 +132,7 @@ public class WebhookServiceImplTest {
 
 
         ResponseEntity<PetServiceResponse> response = template.postForEntity(
-                CONSTANTS.PET_SERVICE_URL_DEV,
+                CONSTANTS.PET_SERVICE_URL_PROD,
                 new HttpEntity<>(petServiceRequest.toString(), headers),
                 PetServiceResponse.class);
 
@@ -140,13 +140,13 @@ public class WebhookServiceImplTest {
         assertNotNull(response.getBody());
         assertEquals(response.getStatusCode(), HttpStatus.CREATED);
         assertEquals(response.getHeaders().getContentType(), new MediaType("application", "hal+json"));
-        assertEquals(response.getHeaders().getLocation(), new URI("http://localhost:14005/api/v1/pets/0de65864-fa6c-413f-9769-5f01883c0e7a"));
+        assertEquals(response.getHeaders().getLocation(), new URI("https://lostboyz-pet-service.herokuapp.com/api/v1/pets/0de65864-fa6c-413f-9769-5f01883c0e7a"));
         assertEquals(response.getBody().getId(), "0de65864-fa6c-413f-9769-5f01883c0e7a");
         assertNotNull(response.getBody().get_links());
         assertNotNull(response.getBody().get_links().path("self").get("href"));
         assertNotNull(response.getBody().get_links().path("pets").get("href"));
-        assertEquals(response.getBody().get_links().path("self").get("href").textValue(), "http://127.0.0.1:14004/api/v1/pets/0de65864-fa6c-413f-9769-5f01883c0e7a");
-        assertEquals(response.getBody().get_links().path("pets").get("href").textValue(), "http://127.0.0.1:14004/api/v1/pets");
+        assertEquals(response.getBody().get_links().path("self").get("href").textValue(), "https://lostboyz-pet-service.herokuapp.com/api/v1/pets/0de65864-fa6c-413f-9769-5f01883c0e7a");
+        assertEquals(response.getBody().get_links().path("pets").get("href").textValue(), "https://lostboyz-pet-service.herokuapp.com/api/v1/pets");
 
         server.verify();
     }
