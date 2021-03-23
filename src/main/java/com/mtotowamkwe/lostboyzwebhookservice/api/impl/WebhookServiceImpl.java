@@ -1,8 +1,10 @@
 package com.mtotowamkwe.lostboyzwebhookservice.api.impl;
 
 import com.mtotowamkwe.lostboyzwebhookservice.api.WebhookService;
+import com.mtotowamkwe.lostboyzwebhookservice.model.PetServiceRequest;
 import com.mtotowamkwe.lostboyzwebhookservice.model.PetServiceResponse;
 import com.mtotowamkwe.lostboyzwebhookservice.model.RedditSubmission;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
@@ -11,6 +13,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.validation.Valid;
+import java.util.UUID;
 
 @RestController
 public class WebhookServiceImpl implements WebhookService {
@@ -28,7 +31,7 @@ public class WebhookServiceImpl implements WebhookService {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            response = template.postForEntity(PET_SERVICE_URL_PROD, new HttpEntity<>(submission, headers),
+            response = template.postForEntity(PET_SERVICE_URL_PROD, new HttpEntity<>(getPetServicePayload(submission), headers),
                     PetServiceResponse.class);
         } catch (Exception e) {
             LOG.error("sendToPetService(" + submission + ")", e);
@@ -39,5 +42,34 @@ public class WebhookServiceImpl implements WebhookService {
         }
 
         return response;
+    }
+
+    public PetServiceRequest getPetServicePayload(RedditSubmission body) {
+        PetServiceRequest requestBody = new PetServiceRequest();
+
+        requestBody.setId(UUID.fromString(body.getId()));
+        requestBody.setAge(0);
+        requestBody.setSex(' ');
+        requestBody.setDescription(body.getTitle());
+        requestBody.setName(body.getSubmission_author_name() + " 's pet.");
+        requestBody.setType("");
+        requestBody.setUrl(body.getUrl());
+        requestBody.setBreed("");
+        requestBody.setFound(false);
+        requestBody.setLocation("");
+
+        if (StringUtils.containsIgnoreCase(body.getTitle(), "dog")) {
+            requestBody.setType("dog");
+        } else if (StringUtils.containsIgnoreCase(body.getTitle(), "cat")) {
+            requestBody.setType("cat");
+        }
+
+        if (StringUtils.containsIgnoreCase(body.getTitle(), "he")) {
+            requestBody.setSex('M');
+        } else if (StringUtils.containsIgnoreCase(body.getTitle(), "she")) {
+            requestBody.setSex('F');
+        }
+
+        return requestBody;
     }
 }
