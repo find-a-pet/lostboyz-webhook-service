@@ -47,7 +47,7 @@ public class WebhookServiceImpl implements WebhookService {
     public PetServiceRequest getPetServicePayload(RedditSubmission body) {
         PetServiceRequest requestBody = new PetServiceRequest();
 
-        requestBody.setId(UUID.fromString(body.getId()));
+        requestBody.setId(UUID.randomUUID());
         requestBody.setAge(0);
         requestBody.setSex(' ');
         requestBody.setDescription(body.getTitle());
