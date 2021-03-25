@@ -14,6 +14,8 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.validation.Valid;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 public class WebhookServiceImpl implements WebhookService {
@@ -51,22 +53,31 @@ public class WebhookServiceImpl implements WebhookService {
         requestBody.setAge(0);
         requestBody.setSex(' ');
         requestBody.setDescription(body.getTitle());
-        requestBody.setName(body.getSubmission_author_name() + " 's pet.");
+        requestBody.setName(body.getSubmission_author_name() + "'s pet.");
         requestBody.setType("");
         requestBody.setUrl(body.getUrl());
         requestBody.setBreed("");
         requestBody.setFound(false);
         requestBody.setLocation("");
 
-        if (StringUtils.containsIgnoreCase(body.getTitle(), "dog")) {
+        String petPattern = "(?i)(\\Wcat\\W)|(\\Wdog\\W)";
+        String genderPattern = "(?i)(\\Wshe\\W)|(\\Whe\\W)";
+
+        Pattern pet = Pattern.compile(petPattern);
+        Pattern gender = Pattern.compile(genderPattern);
+
+        Matcher petMatcher = pet.matcher(body.getTitle());
+        Matcher genderMatcher = gender.matcher(body.getTitle());
+
+        if (petMatcher.find() && StringUtils.containsIgnoreCase(petMatcher.group(), "dog")) {
             requestBody.setType("dog");
-        } else if (StringUtils.containsIgnoreCase(body.getTitle(), "cat")) {
+        } else if (petMatcher.find() && StringUtils.containsIgnoreCase(petMatcher.group(), "cat")) {
             requestBody.setType("cat");
         }
 
-        if (StringUtils.containsIgnoreCase(body.getTitle(), "he")) {
+        if (genderMatcher.find() && StringUtils.containsIgnoreCase(genderMatcher.group(), "he")) {
             requestBody.setSex('M');
-        } else if (StringUtils.containsIgnoreCase(body.getTitle(), "she")) {
+        } else if (genderMatcher.find() && StringUtils.containsIgnoreCase(genderMatcher.group(), "she")) {
             requestBody.setSex('F');
         }
 
